@@ -1,0 +1,4 @@
+#!/bin/sh
+set -eu
+NUM="$1"
+curl -fO http://didaktik.mathematik.hu-berlin.de/user/herrigth/serie"$NUM".pdf
