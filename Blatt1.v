@@ -24,25 +24,32 @@ Section FunctionDefinitions.
   Definition bijective := injective /\ surjective.
 End FunctionDefinitions.
 
-Require Import Arith.PeanoNat.
-Import Nat.
+Require NArithRing.
+
+Require Import BinNat.
+Require Import NArith.BinNatDef.
 
 Section Ex1a.
-  Definition twonat := { x : nat | Even x }.
-  Program Definition f : nat -> twonat :=
-    fun x => 2 * x.
+  Definition twoN := { x : N | N.Even x }.
+  Search (N -> N -> N).
+  Program Definition f : N -> twoN :=
+    fun x => N.mul 2 x.
   Next Obligation.
     match goal with
-    | [ H: nat |- _ ] => exists H; crush
+    | [ H: N |- _ ] => exists H; crush
     end.
   Defined.
 
   Check Logic.eq.
   Search (forall A, A -> A -> Prop).
 
+  (* Lemma mult_inj :  *)
+
   Lemma f_bij : bijective eq Logic.eq f.
-    split.
-    - unfold injective.
-    crush.
-
-
+    Hint Unfold injective surjective.
+    split; autounfold with *.
+    - Arguments N.mul : simpl nomatch.
+      inversion 1.
+      rewrite <- N.mul_cancel_l; crush.
+    - intros [y [x H]]. exists x. crush.
+  Qed.
